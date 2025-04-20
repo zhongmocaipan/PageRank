@@ -49,10 +49,6 @@ def pagerank(matrix, num_nodes, damping_factor=0.85, max_iterations=100, toleran
     # M 矩阵为稀疏标准化转置矩阵
     transition = matrix @ inv_out
 
-    # 输出初始内存使用情况
-    initial_memory = process.memory_info().rss / 1024 / 1024  # 转换为MB
-    print(f"Initial memory usage: {initial_memory:.2f} MB")
-
     # 按块进行迭代更新
     for iteration in range(max_iterations):
         new_pr = np.zeros(num_nodes)
@@ -102,10 +98,8 @@ if __name__ == "__main__":
     input_file = "Data.txt"
     output_file = "Res.txt"
 
-
-    print("Reading data...")
     matrix, num_nodes = read_data(input_file)
-    print("Computing PageRank...")
+
     pr = pagerank(matrix, num_nodes)
     
     write_result(pr, num_nodes, output_file)
