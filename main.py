@@ -27,7 +27,7 @@ def read_data(file_path):
     return matrix, num_nodes
 
 
-def pagerank(matrix, num_nodes, damping_factor=0.85, max_iterations=100, tolerance=1e-6, block_size=100):
+def pagerank(matrix, num_nodes, damping_factor=0.85, max_iterations=100, tolerance=1e-6, block_size=350):
     """
     计算 PageRank 分数
     :param matrix: 转置邻接矩阵
@@ -39,11 +39,6 @@ def pagerank(matrix, num_nodes, damping_factor=0.85, max_iterations=100, toleran
     :return: PageRank 分数
     """
 
-    # 获取当前进程的内存使用情况
-    process = psutil.Process()
-    # 记录开始时间
-    start_time = time.time()
-    
     # 计算每个节点的出度
     out_degree = np.array(matrix.sum(axis=0)).flatten()
     # 死端节点处理：将出度为零的节点的出度设为 1，避免除零
@@ -59,8 +54,13 @@ def pagerank(matrix, num_nodes, damping_factor=0.85, max_iterations=100, toleran
     print(f"Initial memory usage: {initial_memory:.2f} MB")
 
     # 按块进行迭代更新
-    for _ in range(max_iterations):
+    for iteration in range(max_iterations):
         new_pr = np.zeros(num_nodes)
+
+        # 减少阻尼因子，增加随机跳跃
+        if iteration > max_iterations // 2:
+            damping_factor = 0.75  
+
         # 分块计算，每个块大小为 block_size
         for block_start in range(0, num_nodes, block_size):
             block_end = min(block_start + block_size, num_nodes)
@@ -69,23 +69,11 @@ def pagerank(matrix, num_nodes, damping_factor=0.85, max_iterations=100, toleran
 
         # 加上 dead-end 的 PageRank 补偿（total leaked mass）
         leak = damping_factor * pr[out_degree == 0].sum() / num_nodes
-        new_pr += leak
-
-        
+        new_pr += leak       
         # 检查收敛
         if np.linalg.norm(new_pr - pr, 1) < tolerance:
             break
         pr = new_pr
-
-    # 记录结束时间并打印运行时间
-    end_time = time.time()
-    print(f"PageRank computation completed in {end_time - start_time:.4f} seconds.")
-
-        
-    # 输出结束时的内存使用情况
-    final_memory = process.memory_info().rss / 1024 / 1024  # 转换为MB
-    print(f"Final memory usage: {final_memory:.2f} MB")
-
 
     return pr
 
@@ -106,15 +94,28 @@ def write_result(pr, num_nodes, output_file):
 
 
 if __name__ == "__main__":
+
+    # 获取当前进程的内存使用情况
+    process = psutil.Process()
+    # 记录开始时间
+    start_time = time.time()
     input_file = "Data.txt"
     output_file = "Res.txt"
 
 
     print("Reading data...")
     matrix, num_nodes = read_data(input_file)
-    print(f"Data loaded: {num_nodes} nodes and {matrix.nnz} non-zero entries.")
     print("Computing PageRank...")
     pr = pagerank(matrix, num_nodes)
     
     write_result(pr, num_nodes, output_file)
+
+    # 记录结束时间并打印运行时间
+    end_time = time.time()
+    print(f"PageRank computation completed in {end_time - start_time:.4f} seconds.")
+
+        
+    # 输出结束时的内存使用情况
+    final_memory = process.memory_info().rss / 1024 / 1024  # 转换为MB
+    print(f"Final memory usage: {final_memory:.2f} MB")
     
