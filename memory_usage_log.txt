@@ -1,0 +1,40 @@
+[2025-04-25 16:01:14] main.py
+Maximum: 46.97 MB
+Time: 4.28 s
+
+[2025-04-25 16:01:14] main.py
+Maximum: 43.69 MB
+Time: 0.52 s
+
+[2025-04-25 16:01:15] main.py
+Maximum: 40.30 MB
+Time: 0.44 s
+
+[2025-04-25 16:01:15] main.py
+Maximum: 40.11 MB
+Time: 0.45 s
+
+[2025-04-25 16:01:16] main.py
+Maximum: 49.29 MB
+Time: 0.55 s
+
+[2025-04-25 16:01:16] main.py
+Maximum: 40.25 MB
+Time: 0.55 s
+
+[2025-04-25 16:01:17] main.py
+Maximum: 44.14 MB
+Time: 0.57 s
+
+[2025-04-25 16:01:17] main.py
+Maximum: 40.24 MB
+Time: 0.65 s
+
+[2025-04-25 16:01:18] main.py
+Maximum: 40.20 MB
+Time: 0.46 s
+
+[2025-04-25 16:01:18] main.py
+Maximum: 45.10 MB
+Time: 0.54 s
+
