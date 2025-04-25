@@ -54,8 +54,8 @@ def pagerank(matrix, num_nodes, damping_factor=0.85, max_iterations=100, toleran
         new_pr = np.zeros(num_nodes)
 
         # 减少阻尼因子，增加随机跳跃
-        if iteration > max_iterations // 2:
-            damping_factor = 0.75  
+        # if iteration > max_iterations // 2:
+        #     damping_factor = 0.75  
 
         # 分块计算，每个块大小为 block_size
         for block_start in range(0, num_nodes, block_size):
@@ -112,4 +112,42 @@ if __name__ == "__main__":
     # 输出结束时的内存使用情况
     final_memory = process.memory_info().rss / 1024 / 1024  # 转换为MB
     print(f"Final memory usage: {final_memory:.2f} MB")
-    
+
+# if __name__ == "__main__":
+
+#     input_file = "Data.txt"
+#     output_file_prefix = "Res"
+
+#     # damping_factors = [0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95]
+#     damping_factors = [0.85]
+#     # block_sizes = [10, 20, 30, 40, 50, 100, 150, 200, 250, 300, 350, 400] 
+#     block_sizes  = [350]
+
+#     matrix, num_nodes = read_data(input_file)
+#     process = psutil.Process()
+
+#     for block_size in block_sizes:
+#         for d in damping_factors:
+#             print(f"\nTesting with block size = {block_size}, damping factor = {d:.2f}")
+
+#             pr_accumulate = np.zeros(num_nodes)
+#             total_time = 0
+#             total_memory = 0
+
+#             for run in range(10):
+#                 start_time = time.time()
+#                 pr = pagerank(matrix, num_nodes, damping_factor=d, block_size=block_size)
+#                 end_time = time.time()
+
+#                 pr_accumulate += pr
+#                 total_time += (end_time - start_time)
+#                 total_memory += process.memory_info().rss / 1024 / 1024  # MB
+
+#             avg_pr = pr_accumulate / 10
+#             avg_time = total_time / 10
+#             avg_memory = total_memory / 10
+
+#             output_file = f"{output_file_prefix}_block{block_size}_damping{int(d * 100):02d}.txt"
+#             write_result(avg_pr, num_nodes, output_file)
+
+#             print(f"Block size {block_size}, Damping factor {d:.2f} - Avg time: {avg_time:.4f}s, Avg memory: {avg_memory:.2f}MB")
