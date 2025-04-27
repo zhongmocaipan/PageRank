@@ -3,6 +3,8 @@ from scipy.sparse import csr_matrix
 from scipy.sparse import diags
 import psutil 
 import time
+import sys
+import os
 
 def read_data(file_path):
     """
@@ -95,9 +97,20 @@ if __name__ == "__main__":
     process = psutil.Process()
     # 记录开始时间
     start_time = time.time()
-    input_file = "Data.txt"
-    output_file = "Res.txt"
 
+    # 处理路径问题
+    if getattr(sys, 'frozen', False):
+        # PyInstaller 打包时
+        application_path = sys._MEIPASS
+    else:
+        # 正常开发时
+        application_path = os.path.dirname(os.path.abspath(__file__))
+
+    # input_file = "Data.txt"
+    # 修改文件路径
+    input_file = os.path.join(application_path, "Data.txt")
+    output_file = "Res.txt"
+    
     matrix, num_nodes = read_data(input_file)
 
     pr = pagerank(matrix, num_nodes)
